@@ -6,7 +6,6 @@ CMPS 2200  Recitation 1
 import tabulate
 import time
 ###
-
 def linear_search(mylist, key):
 	""" done. """
 	for i,v in enumerate(mylist):
@@ -26,17 +25,50 @@ def binary_search(mylist, key):
 
 def _binary_search(mylist, key, left, right):
 	"""
-	Recursive implementation of binary search.
+		Recursive implementation of binary search.
 
-	Params:
-	  mylist....list to search
-	  key.......search key
-	  left......left index into list to search
-	  right.....right index into list to search
+		Params:
+		  mylist....list to search
+		  key.......search key
+		  left......left index into list to search
+		  right.....right index into list to search
 
-	Returns:
-	  index of key in mylist, or -1 if not present.
-	"""
+		Returns:
+		  index of key in mylist, or -1 if not present.
+		"""
+
+	"base case: if the list is empty"
+	if right < left:
+		return -1
+	"recursive case: if the list is a non-empty list"
+	if right >= left:
+		midpoint = (left + right)//2
+		if key == mylist[midpoint]:
+			return midpoint
+		elif key > mylist[midpoint]:
+			return _binary_search(mylist, key, midpoint + 1, right)
+		else:
+			return _binary_search(mylist, key, left, midpoint -1)
+
+	else:
+		return -1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	### TODO
 	pass
 
@@ -44,48 +76,63 @@ def test_binary_search():
 	assert binary_search([1,2,3,4,5], 5) == 4
 	assert binary_search([1,2,3,4,5], 1) == 0
 	assert binary_search([1,2,3,4,5], 6) == -1
+	assert binary_search([1,2,3,4,5], 2) == 1
+	assert binary_search([1,2,3,4,5], 8) == -1
 	### TODO: add two more tests here.
 	pass
 
 
 def time_search(search_fn, mylist, key):
 	"""
-	Return the number of milliseconds to run this
-	search function on this list.
+		Return the number of milliseconds to run this
+		search function on this list.
 
-	Note 1: `sort_fn` parameter is a function.
-	Note 2: time.time() returns the current time in seconds. 
-	You'll have to multiple by 1000 to get milliseconds.
 
-	Params:
-	  sort_fn.....the search function
-	  mylist......the list to search
-	  key.........the search key 
+		Note 1: `sort_fn` parameter is a function.
+		Note 2: time.time() returns the current time in seconds.
+		You'll have to multiple by 1000 to get milliseconds.
 
-	Returns:
-	  the number of milliseconds it takes to run this
-	  search function on this input.
-	"""
-	### TODO
-	pass
+		Params:
+		  sort_fn.....the search function
+		  mylist......the list to search
+		  key.........the search key
+
+		Returns:
+		  the number of milliseconds it takes to run this
+		  search function on this input.
+		"""
+	time1 = time.perf_counter()
+	search_fn(mylist, key)
+	time2 = time.perf_counter()
+	time3 = (time2 - time1)
+	return time3 * 1000
+
+
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	"""
-	Compare the running time of linear_search and binary_search
-	for input sizes as given. The key for each search should be
-	-1. The list to search for each size contains the numbers from 0 to n-1,
-	sorted in ascending order. 
+		Compare the running time of linear_search and binary_search
+		for input sizes as given. The key for each search should be
+		-1. The list to search for each size contains the numbers from 0 to n-1,
+		sorted in ascending order.
 
-	You'll use the time_search function to time each call.
+		You'll use the time_search function to time each call.
 
-	Returns:
-	  A list of tuples of the form
-	  (n, linear_search_time, binary_search_time)
-	  indicating the number of milliseconds it takes
-	  for each method to run on each value of n
-	"""
-	### TODO
-	pass
+		Returns:
+		  A list of tuples of the form
+		  (n, linear_search_time, binary_search_time)
+		  indicating the number of milliseconds it takes
+		  for each method to run on each value of n
+		"""
+	finalList = []
+	for x in range(len(sizes)):
+		list = [i for i in range(0,int(sizes[x]))]
+		linear_search_time = time_search(linear_search,list,-1)
+		binary_search_time = time_search(binary_search,list,-1)
+		finalList.append([sizes[x], linear_search_time, binary_search_time])
+	return finalList
+
+
 
 def print_results(results):
 	""" done """
